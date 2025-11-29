@@ -1,0 +1,40 @@
+{
+    "manifest_version": 3,
+    "name": "FlowScribe",
+    "version": "1.0.0",
+    "description": "Record browser interactions and generate Playwright automation scripts",
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "tabs",
+        "storage",
+        "webNavigation"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icon16.svg",
+            "48": "icon48.svg",
+            "128": "icon128.svg"
+        }
+    },
+    "icons": {
+        "16": "icon16.svg",
+        "48": "icon48.svg",
+        "128": "icon128.svg"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content_script.js"],
+            "run_at": "document_idle",
+            "all_frames": false
+        }
+    ]
+}
