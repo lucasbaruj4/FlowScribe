@@ -2,6 +2,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.models import Recording, RecordingResponse, GeneratedWorkflow
 from app.storage import storage
+import logging
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="FlowScribe API", version="1.0.0")
 
@@ -27,7 +30,21 @@ def create_recording(recording: Recording):
     Returns the recording_id for future reference.
     """
     recording_id = storage.save_recording(recording)
+    logger.info(f"Recording saved: {recording_id} ({len(recording.events)} events)")
     return RecordingResponse(recording_id=recording_id)
+
+
+@app.get("/api/recordings")
+def list_recordings():
+    """
+    List all recording IDs (for debugging).
+    """
+    # Access the storage's recordings dict
+    recording_ids = list(storage.recordings.keys())
+    return {
+        "count": len(recording_ids),
+        "recording_ids": recording_ids
+    }
 
 
 @app.get("/api/recordings/{recording_id}")
